@@ -21,7 +21,6 @@ litellm_settings:
   set_verbose: false
   telemetry: false
   request_timeout: 300
-
-callbacks: ["callbacks.proxy_handler"]
+  callbacks: ["callbacks.proxy_handler"]
 
 general_settings: {}
