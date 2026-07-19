@@ -1,8 +1,14 @@
-FROM python:3.12-slim
+FROM ghcr.io/berriai/litellm:main-stable
+
 WORKDIR /app
-RUN pip install --no-cache-dir -r requirements.txt
-COPY main.py .
-EXPOSE 80
-HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
-  CMD wget -qO- http://localhost:80/health || exit 1
-CMD ["uvicorn","main:app","--host","0.0.0.0","--port","80","--no-access-log"]
+
+COPY config.yaml .
+COPY callbacks.py .
+
+EXPOSE 4000
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+  CMD wget -qO- http://localhost:4000/health/liveliness || exit 1
+
+ENTRYPOINT ["litellm"]
+CMD ["--config", "/app/config.yaml", "--host", "0.0.0.0", "--port", "4000"]
