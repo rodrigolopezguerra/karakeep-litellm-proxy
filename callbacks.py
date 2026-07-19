@@ -23,6 +23,7 @@ class MiniMaxThinkingDisabler(CustomLogger):
             "rerank",
         ],
     ) -> Optional[Union[Exception, str, dict]]:
+        print(f"[CALLBACK] async_pre_call_hook called: call_type={call_type}, model={data.get('model')}", flush=True)
         if call_type != "completion":
             return data
 
@@ -33,7 +34,9 @@ class MiniMaxThinkingDisabler(CustomLogger):
         extra = data.setdefault("extra_body", {})
         extra["thinking"] = {"type": "disabled"}
         extra["reasoning_split"] = True
+        print(f"[CALLBACK] injected extra_body={extra}", flush=True)
         return data
 
 
 proxy_handler = MiniMaxThinkingDisabler()
+print("[CALLBACK] module loaded", flush=True)
